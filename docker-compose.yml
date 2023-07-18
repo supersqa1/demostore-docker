@@ -1,0 +1,32 @@
+version: '3.8'
+
+
+services:
+  db:
+    image: supersqa/demostore-mysql:5.7
+    restart: always
+    container_name: my_mysql_container
+    ports:
+      - 3309:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: demostore
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+
+
+  wordpress:
+    depends_on:
+      - db
+    image: supersqa/demostore-wordpress:6.2.2
+    container_name: my_wordpress_container
+    ports:
+      - "7575:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: my_mysql_container:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: demostore
+      WORDPRESS_IP: ${WORDPRESS_IP:-0.0.0.0}
+    entrypoint: /entrypoint-custom.sh
