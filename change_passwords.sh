@@ -13,13 +13,15 @@ set -e
 # NEW_MYSQL_ROOT_PASSWORD: The new password for the MySQL 'root' user. This password is used to access the MySQL server.
 # NEW_WORDPRESS_MYSQL_PASSWORD: The new password for the 'wordpress' user used by WordPress to connect to the database.#
 # NEW_WORDPRESS_ADMIN_PASSWORD: The new password for the WordPress 'admin' user. This password is used to access the WordPress admin dashboard.
-# 
+# CURRENT_MYSQL_ROOT_PASSWORD: The current password for 'root' user. If you are running this first time then this is 'password' if you have changed it already then use your new value.
+#
 # Example Usage:
 # Before running the script, set the required environment variables like this:
 #
 # export NEW_MYSQL_ROOT_PASSWORD=mynewrootpassword
 # export NEW_WORDPRESS_MYSQL_PASSWORD=mynewwordpresspassword
 # export NEW_WORDPRESS_ADMIN_PASSWORD=mynewadminpassword
+# export CURRENT_MYSQL_ROOT_PASSWORD=password (the default is password if you have not changed it yet)
 
 # Make sure to replace 'mynewrootpassword', 'mynewwordpresspassword', and 'mynewadminpassword' with your desired passwords.
 # Note: For security reasons, avoid using simple or easily guessable passwords.
@@ -32,26 +34,21 @@ set -e
 ############## USER SETTINGS ############
 # Check if the environment variables are set
 # Check if the environment variables are set
-if [[ -z "${NEW_MYSQL_ROOT_PASSWORD}" || -z "${NEW_WORDPRESS_MYSQL_PASSWORD}" || -z "${NEW_WORDPRESS_ADMIN_PASSWORD}" ]]; then
-    echo "ERROR: Environment variables NEW_MYSQL_ROOT_PASSWORD, NEW_WORDPRESS_MYSQL_PASSWORD, and NEW_WORDPRESS_ADMIN_PASSWORD must be set."
+if [[ -z "${NEW_MYSQL_ROOT_PASSWORD}" || -z "${NEW_WORDPRESS_MYSQL_PASSWORD}" || -z "${NEW_WORDPRESS_ADMIN_PASSWORD}" || -z "${CURRENT_MYSQL_ROOT_PASSWORD}" ]]; then
+    echo "ERROR: Environment variables NEW_MYSQL_ROOT_PASSWORD, NEW_WORDPRESS_MYSQL_PASSWORD, CURRENT_MYSQL_ROOT_PASSWORD and NEW_WORDPRESS_ADMIN_PASSWORD must be set."
     exit 1
 fi
 
-# this is the password to login to the database as 'root' user
-NEW_MYSQL_ROOT_PASSWORD=${NEW_MYSQL_ROOT_PASSWORD}
-
-# This is the password for username 'wordpress'. This is the user WordPress uses to connect to the database.
-NEW_WORDPRESS_MYSQL_PASSWORD=${NEW_WORDPRESS_MYSQL_PASSWORD}
 
 # this is the name of your mysql container for wordpress. 
 # If you dont modify the 'docker-compose.yml' then this will be 'my_mysql_container'
-MYSQL_CONTAINER_NAME=my_mysql_container
+MYSQL_CONTAINER_NAME=${MYSQL_CONTAINER_NAME:-my_mysql_container}
 
 
 ############# STARTING TO APPLY CHANGES #########
 # Change the password for 'root' user in MySQL and set the host to '%'
 echo "Changing password for 'root' user...."
-docker exec -i $MYSQL_CONTAINER_NAME mysql -uroot -ppassword <<EOF
+docker exec -i $MYSQL_CONTAINER_NAME mysql -uroot -p$CURRENT_MYSQL_ROOT_PASSWORD <<EOF
 ALTER USER 'root'@'localhost' IDENTIFIED BY '$NEW_MYSQL_ROOT_PASSWORD';
 ALTER USER 'root'@'%' IDENTIFIED BY '$NEW_MYSQL_ROOT_PASSWORD';
 FLUSH PRIVILEGES;
