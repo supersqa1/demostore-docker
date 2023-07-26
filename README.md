@@ -120,6 +120,9 @@ First set your new passwords as environment variables.
 export NEW_MYSQL_ROOT_PASSWORD=mynewrootpassword
 export NEW_WORDPRESS_MYSQL_PASSWORD=mynewwordpresspassword
 export NEW_WORDPRESS_ADMIN_PASSWORD=mynewadminpassword
+export NEW_WORDPRESS_ADMIN_PASSWORD=mynewadminpassword
+export CURRENT_MYSQL_ROOT_PASSWORD=password (the default is password if you have not changed it yet)
+
 ``````
 Make sure to replace 'mynewrootpassword', 'mynewwordpresspassword', and 'mynewadminpassword' with your desired passwords.
 
