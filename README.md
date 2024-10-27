@@ -7,6 +7,17 @@ Example site: http://demostore.supersqa.com
 
 This is docker containers will run exact copy of the site mentioned above.
 
+## Versions
+* V1 
+  - is the original version that has WP 6.6 and older versions of the plugins.
+  - The original automation code was written for this version
+  - Images used for this version are `supersqa/demostore-mysql:5.7` and `supersqa/demostore-wordpress:6.2.2`
+  - The ports used are `7575` for wordpress and `3309` (for external connection) for MySQL
+  - The `docker-compose.v1.yml` will create containers for virsion 1 (V1)
+
+
+
+
 ## Prerequisites
 
 Before getting started, make sure you have the following installed on your machine:
