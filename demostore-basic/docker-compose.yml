@@ -1,0 +1,31 @@
+version: '3.8'
+
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    container_name: demostore_mysql
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: demostore
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:6.2.2
+    container_name: demostore_wp
+    ports:
+      - "7171:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: demostore_mysql:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: demostore
+      WORDPRESS_IP: ${WORDPRESS_IP:-0.0.0.0}
