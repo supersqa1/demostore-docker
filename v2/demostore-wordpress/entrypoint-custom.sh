@@ -33,10 +33,6 @@ fi
 # change owner of all folders in wp-content
 chown -R www-data:www-data /var/www/html/wp-content
 
-# Check if URL argument is provided
-wp option update siteurl "$NEW_URL"
-wp option update home "$NEW_URL"
-
 
 # Keep the container running
 tail -f /dev/null
