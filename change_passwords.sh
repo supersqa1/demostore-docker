@@ -42,7 +42,22 @@ fi
 
 # this is the name of your mysql container for wordpress. 
 # If you dont modify the 'docker-compose.yml' then this will be 'my_mysql_container'
-MYSQL_CONTAINER_NAME=${MYSQL_CONTAINER_NAME:-my_mysql_container}
+# Check if MYSQL_CONTAINER_NAME is set
+if [ -z "$MYSQL_CONTAINER_NAME" ]; then
+    echo "Error: MYSQL_CONTAINER_NAME is not set. Please set the variable and try again."
+    exit 1
+fi
+
+echo "MYSQL_CONTAINER_NAME is set to '$MYSQL_CONTAINER_NAME'"
+
+# Check if WP_CONTAINER_NAME is set
+if [ -z "$WP_CONTAINER_NAME" ]; then
+    echo "Error: WP_CONTAINER_NAME is not set. Please set the variable and try again."
+    exit 1
+fi
+
+echo "WP_CONTAINER_NAME is set to '$WP_CONTAINER_NAME'"
+
 
 
 ############# STARTING TO APPLY CHANGES #########
@@ -65,12 +80,12 @@ EOF
 
 # update wordpress to use the new password
 echo "Updating WordPress to use the new password ...."
-docker exec -it my_wordpress_container wp config set DB_PASSWORD $NEW_WORDPRESS_MYSQL_PASSWORD --allow-root
+docker exec -it $WP_CONTAINER_NAME wp config set DB_PASSWORD $NEW_WORDPRESS_MYSQL_PASSWORD --allow-root
 
 # Update the password for the WordPress admin user
 # This is the password used to loging to <your site>/wp-admin (backend of WordPress)
 echo "Updating WordPress 'admin' user password...."
-docker exec -it my_wordpress_container wp user update 1 --user_pass="$NEW_WORDPRESS_ADMIN_PASSWORD" --allow-root
+docker exec -it $WP_CONTAINER_NAME wp user update 1 --user_pass="$NEW_WORDPRESS_ADMIN_PASSWORD" --allow-root
 
 
 # Verify MySQL root password
@@ -88,7 +103,7 @@ else
 fi
 
 # Verify WordPress configuration
-if docker exec -it my_wordpress_container wp core is-installed --allow-root; then
+if docker exec -it $WP_CONTAINER_NAME wp core is-installed --allow-root; then
     echo "WordPress is correctly installed and connected to the database."
 else
     echo "Failed to verify WordPress installation and database connection."
@@ -97,7 +112,7 @@ fi
 
 
 # Verify WordPress admin user password
-if docker exec -it my_wordpress_container wp user check-password 1 "$NEW_WORDPRESS_ADMIN_PASSWORD" --allow-root &>/dev/null; then
+if docker exec -it $WP_CONTAINER_NAME wp user check-password 1 "$NEW_WORDPRESS_ADMIN_PASSWORD" --allow-root &>/dev/null; then
     echo "Successfully updated the WordPress admin user password."
 else
     echo "Failed to update the WordPress admin user password."
