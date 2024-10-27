@@ -7,9 +7,14 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     mv wp-cli.phar /usr/local/bin/wp
 
 
+
+# copy the wordpress core files
+COPY ./wp-content /var/www/html/wp-content
+
 # Copy the backup file into the containr.
 # this file will be used to restore the site from the UI
 COPY ./backups/0.0.0.0_wpvivid-fd8f3cd2701c3_2024-10-27-19-33_backup_all.zip  /var/www/html/wp-content/wpvividbackups/
 
-# copy the wordpress core files
-COPY ./wp-content /var/www/html/wp-content
+
+# change owner of the wp core files to make thing work properly
+RUN chown -R www-data:www-data /var/www/html/wp-content
