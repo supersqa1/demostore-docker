@@ -18,7 +18,7 @@ services:
   wordpress:
     depends_on:
       - db
-    image: wordpress:6.2.2
+    image: supersqa/demostore-wordpress:basic-with-backup
     container_name: demostore_wp
     ports:
       - "7171:80"
