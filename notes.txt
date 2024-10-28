@@ -1,0 +1,28 @@
+New version of the site created 2024-10-26
+
+The way the site is created is first the it is created from scratch using latest version WP and Mysql
+Then the data is dumped. Then new image is created that contains the data.
+
+
+
+Notes:
+
+v2: still in progress
+* it works but it always ask to update db and it just works no problem after that
+
+
+v2-w--from-backup
+
+for some reason it gives this error
++ sleep 1
+my_wordpress_container5  | + [[ 54 -lt 180 ]]
+my_wordpress_container5  | + wp core is-installed --allow-root
+my_wordpress_container5  | [27-Oct-2024 21:05:39 UTC] PHP Warning:  Undefined array key "HTTP_HOST" in /var/www/html/wp-includes/functions.php on line 6298
+my_wordpress_container5  | Warning: Undefined array key "HTTP_HOST" in /var/www/html/wp-includes/functions.php on line 6298
+my_wordpress_container5  | + sleep 1
+
+
+that is if we have build image command in the yml
+but if we build the image ahead of time  then it work jsut fine
+
+but required to manually recover the site from the ui using wpvivid
