@@ -8,7 +8,22 @@ Example site: http://demostore.supersqa.com
 This is docker containers will run exact copy of the site mentioned above.
 
 ## Versions
-* V1 
+* version = "demostore-basic" (recomended version)
+  - This version will use custom wp image but original mysql image
+  - It contains 'wp-content' folder & a backup '.zip' for WPVivid
+  - It uses custom wordpress image `supersqa/demostore-wordpress:basic-with-backup`
+  - To run
+    - just run docker compose `docker-compose up -d`
+    - go though the installion proces. Just put random name and keep password simple. All that will change when we restore from backup
+    - Login to `.com/wp-admin` and got to `plugins`
+    - The 'WPVivid Backup' pluing should already exist, just activate it
+    - It should open config page, click the blue button that says 'scan for backups'. Then you should see a backkup show up.
+    - Click on restore and follow prompts.
+    - The site should be up and it will log out 
+    - Login with `admin` and `password`
+    - Run the `change_passwords.sh` to set new password for wordpress and mysql
+
+* version = "v1"
   - is the original version that has WP 6.6 and older versions of the plugins.
   - The original automation code was written for this version
   - Images used for this version are `supersqa/demostore-mysql:5.7` and `supersqa/demostore-wordpress:6.2.2`
